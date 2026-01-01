@@ -26,13 +26,15 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     super.dispose();
   }
 
+  // Navigasi Back menggunakan goNamed (Declarative)
   void _onBack() {
     context.goNamed('stories');
   }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
-      context.pop();
+      // HAPUS TOTAL: context.pop();
+      // Kita tidak butuh pop karena tidak ada dialog yang dibuka.
 
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: source,
@@ -61,35 +63,8 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     }
   }
 
-  void _showImageSourceDialog() {
-    final localization = AppLocalizations.of(context);
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: Text(localization.translate('camera')),
-                onTap: () => _pickImage(ImageSource.camera),
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: Text(localization.translate('gallery')),
-                onTap: () => _pickImage(ImageSource.gallery),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // HAPUS TOTAL: void _showImageSourceDialog() { ... }
+  // Kita ganti dengan UI tombol langsung di layar.
 
   Future<void> _uploadStory() async {
     if (_isUploading) return;
@@ -132,6 +107,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
           );
           await Future.delayed(const Duration(milliseconds: 300));
           if (mounted) {
+            // Navigasi sukses menggunakan goNamed (Declarative)
             context.goNamed('stories');
           }
         } else {
@@ -186,50 +162,81 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                GestureDetector(
-                  onTap: _isUploading ? null : _showImageSourceDialog,
-                  child: Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey[400]!, width: 2),
-                    ),
-                    child: _selectedImage != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.file(
-                              _selectedImage!,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add_photo_alternate,
-                                size: 64,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                localization.translate('tap_to_select_image'),
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
+                // Container Gambar
+                Container(
+                  height: 250,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[400]!, width: 2),
                   ),
+                  child: _selectedImage != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(_selectedImage!, fit: BoxFit.cover),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.image,
+                              size: 64,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              localization.translate('tap_to_select_image'),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
                 const SizedBox(height: 16),
-                if (_selectedImage != null)
-                  OutlinedButton.icon(
-                    onPressed: _isUploading ? null : _showImageSourceDialog,
-                    icon: const Icon(Icons.change_circle),
-                    label: Text(localization.translate('change_image')),
-                  ),
+
+    
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isUploading
+                            ? null
+                            : () => _pickImage(ImageSource.camera),
+                        icon: const Icon(Icons.camera_alt),
+                        label: Text(localization.translate('camera')),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isUploading
+                            ? null
+                            : () => _pickImage(ImageSource.gallery),
+                        icon: const Icon(Icons.photo_library),
+                        label: Text(localization.translate('gallery')),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
