@@ -1,125 +1,76 @@
-// User Model
-class User {
-  final String userId;
-  final String name;
-  final String token;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  User({required this.userId, required this.name, required this.token});
+part 'models.freezed.dart';
+part 'models.g.dart';
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      userId: json['userId'] ?? '',
-      name: json['name'] ?? '',
-      token: json['token'] ?? '',
-    );
-  }
+@freezed
+class User with _$User {
+  const factory User({
+    required String userId,
+    required String name,
+    required String token,
+  }) = _User;
 
-  Map<String, dynamic> toJson() {
-    return {'userId': userId, 'name': name, 'token': token};
-  }
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
 
-// Story Model
-class Story {
-  final String id;
-  final String name;
-  final String description;
-  final String photoUrl;
-  final DateTime createdAt;
-  final double? lat;
-  final double? lon;
+@freezed
+class Story with _$Story {
+  const factory Story({
+    required String id,
+    required String name,
+    required String description,
+    required String photoUrl,
+    required DateTime createdAt,
+    double? lat,
+    double? lon,
+  }) = _Story;
 
-  Story({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.photoUrl,
-    required this.createdAt,
-    this.lat,
-    this.lon,
-  });
-
-  factory Story.fromJson(Map<String, dynamic> json) {
-    return Story(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      photoUrl: json['photoUrl'] ?? '',
-      createdAt: DateTime.parse(
-        json['createdAt'] ?? DateTime.now().toIso8601String(),
-      ),
-      lat: json['lat']?.toDouble(),
-      lon: json['lon']?.toDouble(),
-    );
-  }
+  factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 }
 
-// API Response Models
-class LoginResponse {
-  final bool error;
-  final String message;
-  final User? loginResult;
+@freezed
+class LoginResponse with _$LoginResponse {
+  const factory LoginResponse({
+    required bool error,
+    required String message,
+    User? loginResult,
+  }) = _LoginResponse;
 
-  LoginResponse({required this.error, required this.message, this.loginResult});
-
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
-      error: json['error'] ?? false,
-      message: json['message'] ?? '',
-      loginResult: json['loginResult'] != null
-          ? User.fromJson(json['loginResult'])
-          : null,
-    );
-  }
+  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseFromJson(json);
 }
 
-class RegisterResponse {
-  final bool error;
-  final String message;
+@freezed
+class RegisterResponse with _$RegisterResponse {
+  const factory RegisterResponse({
+    required bool error,
+    required String message,
+  }) = _RegisterResponse;
 
-  RegisterResponse({required this.error, required this.message});
-
-  factory RegisterResponse.fromJson(Map<String, dynamic> json) {
-    return RegisterResponse(
-      error: json['error'] ?? false,
-      message: json['message'] ?? '',
-    );
-  }
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
+      _$RegisterResponseFromJson(json);
 }
 
-class StoriesResponse {
-  final bool error;
-  final String message;
-  final List<Story> listStory;
+@freezed
+class StoriesResponse with _$StoriesResponse {
+  const factory StoriesResponse({
+    required bool error,
+    required String message,
+    required List<Story> listStory,
+  }) = _StoriesResponse;
 
-  StoriesResponse({
-    required this.error,
-    required this.message,
-    required this.listStory,
-  });
-
-  factory StoriesResponse.fromJson(Map<String, dynamic> json) {
-    var list = json['listStory'] as List? ?? [];
-    List<Story> stories = list.map((i) => Story.fromJson(i)).toList();
-
-    return StoriesResponse(
-      error: json['error'] ?? false,
-      message: json['message'] ?? '',
-      listStory: stories,
-    );
-  }
+  factory StoriesResponse.fromJson(Map<String, dynamic> json) =>
+      _$StoriesResponseFromJson(json);
 }
 
-class AddStoryResponse {
-  final bool error;
-  final String message;
+@freezed
+class AddStoryResponse with _$AddStoryResponse {
+  const factory AddStoryResponse({
+    required bool error,
+    required String message,
+  }) = _AddStoryResponse;
 
-  AddStoryResponse({required this.error, required this.message});
-
-  factory AddStoryResponse.fromJson(Map<String, dynamic> json) {
-    return AddStoryResponse(
-      error: json['error'] ?? false,
-      message: json['message'] ?? '',
-    );
-  }
+  factory AddStoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$AddStoryResponseFromJson(json);
 }

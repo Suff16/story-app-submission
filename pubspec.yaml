@@ -18,10 +18,28 @@ dependencies:
   go_router: ^17.0.1
   intl: ^0.20.2
 
+  # Maps
+  google_maps_flutter: ^2.9.0
+  geocoding: ^3.0.0
+  geolocator: ^13.0.2
+
+  # Code Generation
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+
+  flutter_dotenv: ^6.0.0
+
+  infinite_scroll_pagination: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
+  # Code Generation
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  freezed: ^2.5.7
 
 flutter:
   uses-material-design: true

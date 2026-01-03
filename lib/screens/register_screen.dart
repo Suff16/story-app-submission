@@ -97,7 +97,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
 
-    // Definisi Gradasi Branding
     final brandGradient = const LinearGradient(
       colors: [Color(0xFF833AB4), Color(0xFFFD1D1D), Color(0xFFFCB045)],
       begin: Alignment.centerLeft,
@@ -110,10 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.black87,
-          ), // Icon back modern
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
           onPressed: _isRegistering ? null : () => context.go('/login'),
         ),
       ),
@@ -274,7 +270,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           localization.translate('login'),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF833AB4), // Warna Branding
+                            color: Color(0xFF833AB4),
                           ),
                         ),
                       ),

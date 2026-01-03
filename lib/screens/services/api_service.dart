@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../../models/models.dart';
+import '../../config/flavor_config.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://story-api.dicoding.dev/v1';
+  final String baseUrl = FlavorConfig.instance.apiBaseUrl;
 
-  // Register
   Future<RegisterResponse> register(
     String name,
     String email,
@@ -25,7 +25,6 @@ class ApiService {
     }
   }
 
-  // Login
   Future<LoginResponse> login(String email, String password) async {
     try {
       final response = await http.post(
@@ -40,18 +39,22 @@ class ApiService {
     }
   }
 
-  // Get All Stories
-  Future<StoriesResponse> getStories(String token) async {
+  Future<StoriesResponse> getStories(
+    String token, {
+    int page = 1,
+    int size = 10,
+    int location = 0,
+  }) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/stories'),
+        Uri.parse('$baseUrl/stories?page=$page&size=$size&location=$location'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
         return StoriesResponse.fromJson(jsonDecode(response.body));
       } else {
-        return StoriesResponse(
+        return const StoriesResponse(
           error: true,
           message: 'Failed to load stories',
           listStory: [],
@@ -61,12 +64,11 @@ class ApiService {
       return StoriesResponse(
         error: true,
         message: 'Failed to load stories: $e',
-        listStory: [],
+        listStory: const [],
       );
     }
   }
 
-  // Get Story Detail
   Future<Story?> getStoryDetail(String token, String id) async {
     try {
       final response = await http.get(
@@ -86,12 +88,13 @@ class ApiService {
     }
   }
 
-  // Add New Story
   Future<AddStoryResponse> addStory(
     String token,
     File imageFile,
-    String description,
-  ) async {
+    String description, {
+    double? lat,
+    double? lon,
+  }) async {
     try {
       var request = http.MultipartRequest(
         'POST',
@@ -100,6 +103,11 @@ class ApiService {
 
       request.headers['Authorization'] = 'Bearer $token';
       request.fields['description'] = description;
+
+      if (lat != null && lon != null) {
+        request.fields['lat'] = lat.toString();
+        request.fields['lon'] = lon.toString();
+      }
 
       var multipartFile = await http.MultipartFile.fromPath(
         'photo',
